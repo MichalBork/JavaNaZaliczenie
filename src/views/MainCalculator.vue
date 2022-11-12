@@ -51,7 +51,7 @@
 <!--                                       class="rounded mx-auto d-block"-->
 <!--                                       style=" display: flex"> </a></div>-->
 
-      <button @click="getCurrency()">XDDD</button>
+      <button @click="getProperFormat()">XDDD</button>
 
             </div>
             <div class="row pt-25">
@@ -71,21 +71,28 @@
   </div>
 </template>
 <script>
-import MainCalculatorService from "@/services/MainCalculatorService";
 
 export default {
 
   data(){
     return{
       selectOption: null,
+      proba2:[{name: "USD", amount: 3.5, result: 4.5}, {name: "EUR", amount: 3.5, result: 4.5}, {name: "GBP", amount: 3.5, result: 4.5}],
+      x:[],
+      y:[],
+
     }
   },
   methods: {
-   getCurrency() {
-     MainCalculatorService.getProperFormat();
-      this.selectOption = MainCalculatorService.formatedListForBuy;
-      console.log(this.selectOption);
-    },
+    getProperFormat() {
+      console.log(this.proba2)
+      this.proba2.forEach(item => {
+        this.x.push({name: "PLN|" + item.name});
+        this.y.push({name: item.name +"|PLN"});
+      })
+      console.log(this.x)
+      console.log(this.y)
+    }
   },
 
 };
