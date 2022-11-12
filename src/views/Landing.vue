@@ -55,8 +55,8 @@
                   <dt class="">Firma posiada licencję na świadczenie usług płatniczych Komisji Nadzoru Finansowego</dt>
 
                </dl>
-                  <base-button tag="a" href="#" type="primary" class="mt-4">
-                    Learn more
+                  <base-button tag="a" @click="goToPage('/register')"  type="primary" class="mt-4">
+                    Przekonaj sie sam
                   </base-button>
                 </card>
               </div>
@@ -72,8 +72,8 @@
                     <dt>Całą dobę, cały tydzień i cały rok wymieniasz bez wychodzenia z domu</dt>
 
                   </dl>
-                  <base-button tag="a" href="#" type="success" class="mt-4">
-                    Learn more
+                  <base-button tag="a" @click="goToPage('/register')"  type="success" class="mt-4">
+                    Przekonaj sie sam
                   </base-button>
                 </card>
               </div>
@@ -90,8 +90,8 @@
                     <dt>Transakcje realizujemy online, eliminując ryzyko związane z obrotem gotówki.</dt>
 
                   </dl>
-                  <base-button tag="a" href="#" type="warning" class="mt-4">
-                    Learn more
+                  <base-button tag="a" @click="goToPage('/register')" type="warning" class="mt-4">
+                    Przekonaj sie sam
                   </base-button>
                 </card>
               </div>
@@ -178,7 +178,7 @@
 
                   </dl>
                   <base-button tag="a" href="#" type="primary" class="mt-4">
-                    Learn more
+                    Dowiedz sie wiecej
                   </base-button>
                 </card>
               </div>
@@ -195,7 +195,7 @@
 
                   </dl>
                   <base-button tag="a" href="#" type="success" class="mt-4">
-                    Learn more
+                    Dowiedz sie wiecej
                   </base-button>
                 </card>
               </div>
@@ -225,7 +225,7 @@
                   </div>
 
                   <base-button tag="a" href="#" type="warning" class="mt-4">
-                    Learn more
+                    Dowiedz sie wiecej
                   </base-button>
                 </card>
               </div>
@@ -263,9 +263,9 @@
               <p class="lead">Oszczędzaj na płatnościach za granicą</p>
               <p>Usprawnij proces wymiany walut. Zaplanuj dokonywanie regularnych transakcji. Ustaw przydatne alerty. Oszczędzaj czas i zlecaj wymianę po atrakcyjnym kursie.</p>
               <p>Zapomnij o niekorzystnych kursach i ukrytych opłatach. Przekonaj się, ile możesz zaoszczędzić. Załóż darmowe konto i zacznij korzystnie wymieniać walutę.</p>
-              <base-button tag="a" href="#" type="warning" class="mt-4">
-                Learn more
-              </base-button>
+              <button type="button" class="btn btn-default" @click="goToPage('/register')">
+                <a > Dowiedz sie wiecej </a>
+              </button>
             </div>
           </div>
         </div>
@@ -276,19 +276,24 @@
 </template>
 
 <style scoped>
-@media only screen and (max-width: 100px) {
-  /* For mobile phones: */
-  [class*="break-point"] {
-    display: block;
-  }
-}
+
 </style>
 
 <script>
 export default {
   name: "home",
-  components: {
-    BasicCalcWithTwoFieldsAndSelect: () => import("@/components/Forms/BasicCalcWithTwoFieldsAndSelect"),
+ data() {
+    return {
+      url: process.env.BASE_URL,
+      subtitle: "This is the home page"
+    };
+  },
+  methods: {
+
+    goToPage(page) {
+      this.$router.push(page);
+    },
+
   }
 };
 </script>

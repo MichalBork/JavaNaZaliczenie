@@ -8,6 +8,7 @@ import Login from "./views/Login.vue";
 import Register from "./views/Register.vue";
 import Profile from "./views/Profile.vue";
 import CurrentValueForAllCurrency from "@/views/CurrentValueForAllCurrency";
+import MainCalculator from "@/views/MainCalculator";
 
 Vue.use(Router);
 
@@ -16,15 +17,6 @@ export default new Router({
   routes: [
     {
       path: "/",
-      name: "components",
-      components: {
-        header: AppHeader,
-        default: Components,
-        footer: AppFooter
-      }
-    },
-    {
-      path: "/landing",
       name: "landing",
       components: {
         header: AppHeader,
@@ -32,6 +24,7 @@ export default new Router({
         footer: AppFooter
       }
     },
+
     {
       path: "/login",
       name: "login",
@@ -58,7 +51,18 @@ export default new Router({
         default: Profile,
         footer: AppFooter
       }
-    },{
+    },
+    {
+      path: "/calculator",
+      name: "calculator",
+      components: {
+        header: AppHeader,
+        default: MainCalculator,
+        footer: AppFooter
+      }
+    },
+
+    {
       path: "/current",
       name: "current",
       components: {
@@ -68,11 +72,5 @@ export default new Router({
       }
     }
   ],
-  scrollBehavior: to => {
-    if (to.hash) {
-      return { selector: to.hash };
-    } else {
-      return { x: 0, y: 0 };
-    }
-  }
+
 });
