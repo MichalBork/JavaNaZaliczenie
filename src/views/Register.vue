@@ -200,6 +200,8 @@
   </section>
 </template>
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -222,7 +224,14 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log(this.form)
+
+      axios.post('http://localhost:8080/api/clients/register', this.form)
+        .then(response => {
+          this.message = response.data.message;
+        })
+        .catch(error => {
+          this.message = error.response.data.message;
+        });
     }
   }
 

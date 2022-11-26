@@ -9,68 +9,82 @@ import Register from "./views/Register.vue";
 import Profile from "./views/Profile.vue";
 import CurrentValueForAllCurrency from "@/views/CurrentValueForAllCurrency";
 import MainCalculator from "@/views/MainCalculator";
+import NbpUpdate from "@/services/Nbp.vue";
 
 Vue.use(Router);
 
 export default new Router({
-  linkExactActiveClass: "active",
-  routes: [
-    {
-      path: "/",
-      name: "landing",
-      components: {
-        header: AppHeader,
-        default: Landing,
-        footer: AppFooter
-      }
-    },
+    linkExactActiveClass: "active",
+    routes: [
+        {
+            path: "/",
+            name: "landing",
+            components: {
+                header: AppHeader,
+                default: Landing,
+                footer: AppFooter
+            }
+        },
 
-    {
-      path: "/login",
-      name: "login",
-      components: {
-        header: AppHeader,
-        default: Login,
-        footer: AppFooter
-      }
-    },
-    {
-      path: "/register",
-      name: "register",
-      components: {
-        header: AppHeader,
-        default: Register,
-        footer: AppFooter
-      }
-    },
-    {
-      path: "/profile",
-      name: "profile",
-      components: {
-        header: AppHeader,
-        default: Profile,
-        footer: AppFooter
-      }
-    },
-    {
-      path: "/calculator",
-      name: "calculator",
-      components: {
-        header: AppHeader,
-        default: MainCalculator,
-        footer: AppFooter
-      }
-    },
+        {
+            path: "/login",
+            name: "login",
 
-    {
-      path: "/current",
-      name: "current",
-      components: {
-        header: AppHeader,
-        default: CurrentValueForAllCurrency,
-        footer: AppFooter
-      }
-    }
-  ],
+            components: {
+                header: AppHeader,
+                default: Login,
+                footer: AppFooter
+            }
+        },
+        {
+            path: "/register",
+            name: "register",
+            components: {
+                header: AppHeader,
+                default: Register,
+                footer: AppFooter
+            }
+        },
+        {
+            path: "/profile",
+            name: "profile",
+            beforeEnter: (to, from, next) => {
+               localStorage.getItem('user-token') !== null ? next() : next('/login');
+            },
+            components: {
+                header: AppHeader,
+                default: Profile,
+                footer: AppFooter
+            }
+        },
+        {
+            path: "/calculator",
+            name: "calculator",
+            components: {
+                header: AppHeader,
+                default: MainCalculator,
+                footer: AppFooter
+            }
+        },
+
+        {
+            path: "/current",
+            name: "current",
+            components: {
+                header: AppHeader,
+                default: CurrentValueForAllCurrency,
+                footer: AppFooter
+            }
+        },
+        {
+          path: "/nbpupdate",
+            name: "nbpupdate",
+            components: {
+              default: NbpUpdate
+            }
+        }
+
+
+    ],
 
 });

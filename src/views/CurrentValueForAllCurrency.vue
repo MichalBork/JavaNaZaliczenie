@@ -48,11 +48,11 @@
               </thead>
               <tbody>
 
-              <tr v-for="item in currency ">
-                <td class="text-center">3</td>
-                <td>{{currency}}</td>
-                <td>{{amount}}</td>
-                <td>{{result}}</td>
+              <tr v-for="(item,index) in currency ">
+                <td class="text-center">{{ index + 1}}</td>
+                <td>{{currency[index]}}</td>
+                <td>{{amount[index]}}</td>
+                <td>{{result[index]}}</td>
                 <td class="td-actions text-right"> <button class="btn btn-info btn-icon btn-sm btn-simple"><a href="Landing.vue">XDDD</a></button></td>
 
               </tr>
@@ -76,17 +76,38 @@
 
 
 <script>
+import axios from "axios";
+
 export default {
   name: "CurrentValueForAllCurrency",
 
   data() {
     return {
       currencies: [],
-      currency: [123, 123, 123],
-      amount: [123, 321, 123],
-      result: [123, 123, 222]
+      currency: [],
+      amount: [],
+      result: [],
     }
-}
+},
+  methods: {
+    getCurrency() {
+      axios
+        .get("http://localhost:8080/api/nbp/all")
+        .then((response) => {
+          console.log(response);
+          response.data.forEach((item) => {
+            this.currency.push("PLN|"+item.currency)
+            this.amount.push(item.ask);
+            this.result.push(item.bid);
+          });
+        });
+    },
+  },
+  created() {
+    this.getCurrency();
+
+  },
+
 }
 
 
