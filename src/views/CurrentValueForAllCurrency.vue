@@ -21,7 +21,8 @@
                 <h1 class="display-3  text-white">Wymiana walut
                   <span>Prosta i bezpieczna wymiana walut online </span>
                 </h1>
-                <p class="lead  text-white">Wymieniaj waluty taniej, po atrakcyjnych kursach. Brak ukrytych opłat i prowizji. Rabat na pierwszą wymianę waluty.</p>
+                <p class="lead  text-white">Wymieniaj waluty taniej, po atrakcyjnych kursach. Brak ukrytych opłat i
+                  prowizji. Rabat na pierwszą wymianę waluty.</p>
 
               </div>
             </div>
@@ -29,46 +30,33 @@
         </div>
       </section>
     </div>
-
+    <div>
+    </div>
     <section class="section section-lg pt-lg-0 ">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-12">
 
-            <table class="table" style="background: white">
-              <thead>
-              <tr>
-                <th class="text-center">#</th>
-                <th>Para walutowa</th>
-                <th>Kurs Kupna</th>
-                <th>Kurs Sprzedazy</th>
-                <th>Wymien</th>
+            <b-pagination
+                v-model="currentPage"
+                :total-rows="rows"
+                :per-page="perPage"
+                aria-controls="my-table"
+            ></b-pagination>
 
-              </tr>
-              </thead>
-              <tbody>
-
-              <tr v-for="(item,index) in currency ">
-                <td class="text-center">{{ index + 1}}</td>
-                <td>{{currency[index]}}</td>
-                <td>{{amount[index]}}</td>
-                <td>{{result[index]}}</td>
-                <td class="td-actions text-right"> <button class="btn btn-info btn-icon btn-sm btn-simple"><a href="Landing.vue">XDDD</a></button></td>
-
-              </tr>
-              </tbody>
-            </table>
+            <b-table
+                id="my-table"
+                :items="items"
+                :per-page="perPage"
+                :current-page="currentPage"
+                striped hover
+            ></b-table>
+            <div>
+            </div>
           </div>
           </div>
           </div>
     </section>
-
-
-
-
-
-
-
 
 
   </div>
@@ -83,32 +71,39 @@ export default {
 
   data() {
     return {
+      perPage: 7,
+      currentPage: 1,
       currencies: [],
       currency: [],
       amount: [],
       result: [],
+      items: [],
     }
-},
+  },
   methods: {
     getCurrency() {
       axios
-        .get("http://localhost:8080/api/nbp/all")
-        .then((response) => {
-          console.log(response);
-          response.data.forEach((item) => {
-            this.currency.push("PLN|"+item.currency)
-            this.amount.push(item.ask);
-            this.result.push(item.bid);
+          .get("http://localhost:8080/api/nbp/all")
+          .then((response) => {
+            console.log(response);
+            response.data.forEach((item,index) => {
+              this.items.push({'#':index+1,currencies:"PLN|" + item.currency, amount:item.ask, result:item.bid,});
+            });
           });
-        });
     },
+
+
   },
   created() {
     this.getCurrency();
 
   },
-
-}
+  computed: {
+    rows() {
+      return this.items.length
+    }
+  },
+};
 
 
 </script>
