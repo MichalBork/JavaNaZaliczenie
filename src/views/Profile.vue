@@ -121,7 +121,33 @@
     </div>
 </template>
 <script>
-export default {};
+import axios from "axios";
+
+export default {
+
+  data() {
+    return {
+    user:[],
+    };
+  },
+
+  methods: {
+
+  },
+  created() {
+  axios.get('http://localhost:8080/api/clients/get/'+localStorage.getItem('user-token'))
+    .then(response => {
+      this.user = response.data;
+      console.log(this.user);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  }
+
+
+
+};
 </script>
 <style>
 </style>

@@ -226,13 +226,33 @@ export default {
     onSubmit() {
 
       axios.post('http://localhost:8080/api/clients/register', this.form)
-        .then(response => {
-          this.message = response.data.message;
-        })
-        .catch(error => {
-          this.message = error.response.data.message;
-        });
+          .then(response => {
+            this.message = response.data.message;
+            console.log(response)
+            this.sendMail(response.data);
+
+          })
+          .catch(error => {
+            this.message = error.response.data.message;
+          });
+    },
+
+    sendMail(userID) {
+      axios.post('http://localhost:8080/sendMail', {
+        id: userID,
+        subject: "Link aktywacyjny",
+        template: "activeAccountMailTemplate"
+      })
+          .then(response => {
+            console.log(response)
+
+          })
+          .catch(error => {
+            this.message = error.response.data.message;
+          });
     }
+
+
   }
 
 };

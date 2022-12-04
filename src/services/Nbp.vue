@@ -18,7 +18,7 @@ export default {
       var mm = today.getMonth()+1; //January is 0!
       var yyyy = today.getFullYear();
       //if weekend then set date to friday
-      if(today.getDay() == 6){
+      if(today.getDay() === 6){
         dd = dd - 1;
       }
       if(dd<10){

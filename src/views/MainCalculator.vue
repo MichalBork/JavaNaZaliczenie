@@ -17,17 +17,21 @@
         <card shadow class="card-profile pt-150 pb-150" no-body>
           <div class="px-4">
 
+            <div class="alert alert-success" role="alert" v-if="actionSuccess">
+              <strong>Success!</strong>  Wymiana walut przebiegła pomyślnie. W ciagu 24h otrzymasz email z potwierdzeniem.
+            </div>
+            <div class="row" v-if="!actionSuccess">
 
-            <div class="row">
 
               <!--              VALUE-->
-              <div class="col-4">
-                <div class="col-md-12">
-                  <div class="form-group">
+              <div class="col-4" >
+                <div class="col-md-12" >
+                  <div class="form-group" >
                     <label for="name" id="name">Kwota</label>
                     <input type="text"
                            v-model="amountToExchange"
                            class="form-control"
+                           @change="calculate"
                            id="name"
                            placeholder="Imie"/>
                   </div>
@@ -38,7 +42,7 @@
               <div class="col-6">
                 <div class="form-group">
                   <label for="bankNumber" id="bankName">Waluta</label>
-                  <select v-model="selected" class="custom-select">
+                  <select v-model="selected" class="custom-select" @change="calculate">
 
                     <optgroup label="Kupno">
                       <option v-for="option in plnToSmt" :value="option.value">
@@ -62,7 +66,8 @@
               <!--                                       class="rounded mx-auto d-block"-->
               <!--                                       style=" display: flex"> </a></div>-->
 
-              <button @click="calculate()">XDDD</button>
+              <b-button size="lg"  @click="addTransactionToDB">Kliknij i zaplac</b-button>
+
 
             </div>
             <div class="row pt-25">
@@ -70,8 +75,8 @@
                 Polski. Do podanej kwoty zostala doliczona oplata prowizyjna</p>
               </div>
               <div class="col-4">
-                <div class="alert alert-primary" role="alert" v-if="toPay">
-                  <strong>Do zaplaty: {{ toPay }} PLN</strong>
+                <div class="alert alert-primary" role="alert" v-if="toPay && toPay > 0">
+                  <strong>{{ givenAction }} {{ toPay }} {{ currencyDisplay }}</strong>
                 </div>
               </div>
             </div>
@@ -101,29 +106,71 @@ export default {
       smtToPln: [],
       amountToExchange: 0,
       toPay: 0,
+      currencyDisplay: "PLN",
+      givenAction: null,
+      selectedCurrencyNameToSell: null,
+      selectedCurrencyNameToBuy: null,
+      actionSuccess:false
     }
   },
   methods: {
-    calculate():mixed {
+    calculate() {
       let x = this.amountToExchange;
       let selectedCurrency = this.selected;
       let sellOrBuy = this.selected.search(";sell");
+      let toPay = 0;
+      let selectedCurrencyNameToBuy = "";
+      let selectedCurrencyNameToSell = "";
       if (sellOrBuy === -1) {
-        this.currency.forEach( function (item) {
+        this.givenAction = "Do zapłaty";
+        this.currency.forEach(function (item) {
           if (item.code === selectedCurrency.replace(";buy", "")) {
-          return  x * item.buy;
+            console.log(item);
+            toPay = x * item.buy;
+            selectedCurrencyNameToBuy = item.code;
+            selectedCurrencyNameToSell = "PLN";
+
+          }
+        })
+      } else {
+        this.givenAction = "Otrzymasz";
+        this.currency.forEach(function (item) {
+          if (item.code === selectedCurrency.replace(";sell", "")) {
+            toPay = x * item.sell;
+            selectedCurrencyNameToBuy = "PLN";
+            selectedCurrencyNameToSell = item.code;
 
           }
         })
       }
-
+      //round to 2 decimal places
+      this.selectedCurrencyNameToSell = selectedCurrencyNameToSell;
+      this.selectedCurrencyNameToBuy = selectedCurrencyNameToBuy;
+      this.toPay = toPay.toFixed(2);
     },
 //TODO add method to calculate
 
-    getResult(){
-      this.toPay = this.calculate();
+    addTransactionToDB() {
+          axios.post('http://localhost:8080/api/transactions', {
+        date: new Date(),
+        value: this.amountToExchange,
+        type: this.selected.search(";sell") === -1 ? 1 : 2,
+        bidName: this.selected.search(";sell") === -1 ? this.selectedCurrencyNameToBuy : this.selectedCurrencyNameToSell,
+        askName: this.selected.search(";buy") === -1 ? this.selectedCurrencyNameToBuy : this.selectedCurrencyNameToSell,
+        client: localStorage.getItem("user-token"),
+        nbpValue: this.toPay
+      }).catch(error => {
+        console.log(error);
+      }).then(response => {
+        console.log(response);
+        this.actionSuccess = true;
+      });
+
     },
 
+    setActionSuccess(bool){
+      this.actionSuccess = bool;
+    },
 
     getAllCurrencyForTrade() {
       axios.get('http://localhost:8080/api/nbp/today')
@@ -134,8 +181,8 @@ export default {
                 code: item.currency,
                 plnToSmt: "PLN|" + item.currency,
                 smtToPln: item.currency + "|PLN",
-                sell: item.bid,
-                buy: item.ask
+                buy: item.bid,
+                sell: item.ask
               });
 
             })
