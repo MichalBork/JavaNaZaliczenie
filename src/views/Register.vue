@@ -229,7 +229,7 @@ export default {
           .then(response => {
             this.message = response.data.message;
             console.log(response)
-            this.sendMail(response.data);
+            // this.sendMail(response.data);
 
           })
           .catch(error => {

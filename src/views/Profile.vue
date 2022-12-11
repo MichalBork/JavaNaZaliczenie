@@ -29,7 +29,7 @@
                             <div class="col-lg-4 order-lg-1">
                                 <div class="card-profile-stats d-flex justify-content-center">
                                     <div>
-                                        <span class="heading">22</span>
+                                        <span class="heading">{{items.length}}</span>
                                         <span class="description">Liczba transakcji</span>
                                     </div>
                                     <div>
@@ -49,69 +49,24 @@
                             <div class="h6 font-weight-300"><i class="ni location_pin mr-2"></i>Bucharest, Romania</div>
                             <div class="h6 mt-4"><i class="ni business_briefcase-24 mr-2"></i>mail@mail.con - Creative Tim Officer</div>
                             <div><i class="ni education_hat mr-2"></i>University of Computer Science</div>
-                          <div class="row pt-100">
-                            <div class="col">
 
-                              <card class="border-0" hover shadow body-classes="py-5">
-                                <icon name="ni ni-check-bold" type="primary" rounded class="mb-4">
-                                </icon>
-                                <h6 class="text-primary text-uppercase">Wiarygodność</h6>
-                                <dl>
-                                  <dt class="">Firma posiada licencję na świadczenie usług płatniczych Komisji Nadzoru Finansowego</dt>
-
-                                </dl>
-                                <base-button tag="a" @click="goToPage('/register')"  type="primary" class="mt-4">
-                                  Przekonaj sie sam
-                                </base-button>
-                              </card>
-
-                            </div>
-                            <div class="col">
-
-
-
-                              <card class="border-0" hover shadow body-classes="py-5">
-                                <icon name="ni ni-check-bold" type="primary" rounded class="mb-4">
-                                </icon>
-                                <h6 class="text-primary text-uppercase">Wiarygodność</h6>
-                                <dl>
-                                  <dt class="">Firma posiada licencję na świadczenie usług płatniczych Komisji Nadzoru Finansowego</dt>
-
-                                </dl>
-                                <base-button tag="a" @click="goToPage('/register')"  type="primary" class="mt-4">
-                                  Przekonaj sie sam
-                                </base-button>
-                              </card>
-
-
-                          </div>
-                          </div>
                         </div>
                         <div class="mt-5 py-5 border-top text-center">
                             <div class="row justify-content-center">
-                              <table class="table" style="background: white">
-                                <thead>
-                                <tr>
-                                  <th class="text-center">#</th>
-                                  <th>Para walutowa</th>
-                                  <th>Kurs Kupna</th>
-                                  <th>Kurs Sprzedazy</th>
-                                  <th>Wymien</th>
+                              <b-pagination
+                                  v-model="currentPage"
+                                  :total-rows="rows"
+                                  :per-page="perPage"
+                                  aria-controls="my-table"
+                              ></b-pagination>
 
-                                </tr>
-                                </thead>
-                                <tbody>
-
-                                <tr >
-                                  <td class="text-center">3</td>
-                                  <td>{x{currency}}</td>
-                                  <td>{x{amount}}</td>
-                                  <td>{{xresult}}</td>
-                                  <td class="td-actions text-right"> <button class="btn btn-info btn-icon btn-sm btn-simple"><a href="Landing.vue">XDDD</a></button></td>
-
-                                </tr>
-                                </tbody>
-                              </table>
+                              <b-table
+                                  id="my-table"
+                                  :items="items"
+                                  :per-page="perPage"
+                                  :current-page="currentPage"
+                                  striped hover
+                              ></b-table>
                             </div>
                         </div>
                     </div>
@@ -128,17 +83,43 @@ export default {
   data() {
     return {
     user:[],
+      perPage: 7,
+      currentPage: 1,
+      items: [],
     };
   },
 
   methods: {
 
-  },
+    createTable(table) {
+
+      this.items = table;
+      this.changeKeysName();
+    },
+
+    changeKeysName(){
+      this.items.forEach(function (item) {
+        item['Waluta sprzedazy'] = item['type'] === 1 ? item['bidName'] : item['askName'];
+        item['Waluta kupna'] = item['type'] === 1 ? item['askName'] : item['bidName'];
+        item['Numer referencyjny'] = item['id'];
+        item['Kwota tranzakcji'] = item['nbpValue'];
+        item['typ'] = item['type'] === 1 ? 'Kupno' : 'Sprzedaż';
+        delete item['type'];
+        delete item['bidName'];
+        delete item['askName'];
+        delete item['nbpValue'];
+        delete item['client'];
+        delete item['id'];
+
+      });
+    },
+    },
   created() {
-  axios.get('http://localhost:8080/api/clients/get/'+localStorage.getItem('user-token'))
+  axios.get('http://localhost:8080/api/clients/profile/'+localStorage.getItem('user-token'))
     .then(response => {
-      this.user = response.data;
-      console.log(this.user);
+      console.log(response.data.user);
+      console.log(response.data.transaction);
+      this.createTable(response.data.transaction);
     })
     .catch(error => {
       console.log(error);

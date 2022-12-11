@@ -21,6 +21,10 @@ export default {
       if(today.getDay() === 6){
         dd = dd - 1;
       }
+      if(today.getDay() === 0){
+        dd = dd - 2;
+      }
+      console.log(today.getDay());
       if(dd<10){
           dd='0'+dd
       }
