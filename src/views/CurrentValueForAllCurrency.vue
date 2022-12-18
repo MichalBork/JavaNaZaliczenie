@@ -83,7 +83,7 @@ export default {
   methods: {
     getCurrency() {
       axios
-          .get("http://localhost:8080/api/nbp/all")
+          .get("http://localhost:8080/api/nbp/today")
           .then((response) => {
             console.log(response);
             response.data.forEach((item,index) => {

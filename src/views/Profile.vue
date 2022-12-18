@@ -26,29 +26,25 @@
                             <div class="col-lg-4 order-lg-3 text-lg-right align-self-lg-center">
 
                             </div>
-                            <div class="col-lg-4 order-lg-1">
+                            <div class="col-lg-6 order-lg-1">
                                 <div class="card-profile-stats d-flex justify-content-center">
                                     <div>
                                         <span class="heading">{{items.length}}</span>
                                         <span class="description">Liczba transakcji</span>
                                     </div>
+
                                     <div>
-                                        <span class="heading">10</span>
-                                        <span class="description">Liczba walut na koncie</span>
-                                    </div>
-                                    <div>
-                                        <span class="heading">89</span>
+                                        <span class="heading">{{user.registrationDate}}</span>
                                         <span class="description">Dolaczyl</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="text-center mt-5">
-                            <h3>Jessica Jones
+                            <h3>{{user.name}} {{user.surname}}
                             </h3>
-                            <div class="h6 font-weight-300"><i class="ni location_pin mr-2"></i>Bucharest, Romania</div>
-                            <div class="h6 mt-4"><i class="ni business_briefcase-24 mr-2"></i>mail@mail.con - Creative Tim Officer</div>
-                            <div><i class="ni education_hat mr-2"></i>University of Computer Science</div>
+                            <div class="h6 font-weight-300"><i class="ni location_pin mr-2"></i>{{user.address}}</div>
+                            <div class="h6 mt-4"><i class="ni business_briefcase-24 mr-2"></i>{{user.email}} || {{user.phone}}</div>
 
                         </div>
                         <div class="mt-5 py-5 border-top text-center">
@@ -119,6 +115,7 @@ export default {
     .then(response => {
       console.log(response.data.user);
       console.log(response.data.transaction);
+      this.user = response.data.user;
       this.createTable(response.data.transaction);
     })
     .catch(error => {

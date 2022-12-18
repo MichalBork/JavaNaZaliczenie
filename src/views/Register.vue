@@ -132,7 +132,7 @@
 
                           type="text"
                           class="form-control"
-                          v-model="form.address"
+                          v-model="form.city"
                           id="address"
                           placeholder="Miejscowosc">
                     </div>
@@ -217,19 +217,20 @@ export default {
         street: '',
         zip: '',
         bankNumber: '',
-        bankName: ''
+        bankName: '',
+        city: ''
       },
       message: ''
     }
   },
   methods: {
     onSubmit() {
-
+this.createAddress();
       axios.post('http://localhost:8080/api/clients/register', this.form)
           .then(response => {
             this.message = response.data.message;
             console.log(response)
-            // this.sendMail(response.data);
+            this.sendMail(response.data);
 
           })
           .catch(error => {
@@ -241,7 +242,8 @@ export default {
       axios.post('http://localhost:8080/sendMail', {
         id: userID,
         subject: "Link aktywacyjny",
-        template: "activeAccountMailTemplate"
+        template: "activeAccountMailTemplate",
+        mailRecipient: this.form.email
       })
           .then(response => {
             console.log(response)
@@ -250,6 +252,18 @@ export default {
           .catch(error => {
             this.message = error.response.data.message;
           });
+    },
+
+    createAddress(){
+
+     let a =
+       this.form.city + " " +
+     this.form.street + " " +
+        this.form.zip
+
+     this.form.address = a;
+
+      console.log(a);
     }
 
 
