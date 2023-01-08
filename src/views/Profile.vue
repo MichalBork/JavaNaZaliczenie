@@ -113,13 +113,10 @@ export default {
   created() {
   axios.get('http://localhost:8080/api/clients/profile/'+localStorage.getItem('user-token'))
     .then(response => {
-      console.log(response.data.user);
-      console.log(response.data.transaction);
       this.user = response.data.user;
       this.createTable(response.data.transaction);
     })
     .catch(error => {
-      console.log(error);
     });
   }
 

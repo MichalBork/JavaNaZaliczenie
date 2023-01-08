@@ -85,7 +85,6 @@ export default {
       axios
           .get("http://localhost:8080/api/nbp/today")
           .then((response) => {
-            console.log(response);
             response.data.forEach((item,index) => {
               this.items.push({'#':index+1,currencies:"PLN|" + item.currency, amount:item.ask, result:item.bid,});
             });

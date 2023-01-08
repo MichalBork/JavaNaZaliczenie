@@ -125,7 +125,6 @@ export default {
         this.givenAction = "Do zapłaty";
         this.currency.forEach(function (item) {
           if (item.code === selectedCurrency.replace(";buy", "")) {
-            console.log(item);
             toPay = x * item.buy;
             selectedCurrencyNameToBuy = item.code;
             selectedCurrencyNameToSell = "PLN";
@@ -160,9 +159,7 @@ export default {
         client: localStorage.getItem("user-token"),
         nbpValue: this.toPay
       }).catch(error => {
-        console.log(error);
       }).then(response => {
-        console.log(response);
         this.actionSuccess = true;
       });
 
@@ -175,7 +172,6 @@ export default {
     getAllCurrencyForTrade() {
       axios.get('http://localhost:8080/api/nbp/today')
           .then(response => {
-            console.log(response.data);
             response.data.forEach((item) => {
               this.currency.push({
                 code: item.currency,
@@ -190,7 +186,6 @@ export default {
 
           })
           .catch(error => {
-            console.log(error);
           });
     },
     creteOptions() {

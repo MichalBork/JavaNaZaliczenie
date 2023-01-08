@@ -35,23 +35,26 @@
                             placeholder="Password"
                             addon-left-icon="ni ni-lock-circle-open">
                 </base-input>
-                <base-checkbox>
-                  Remember me
-                </base-checkbox>
+
                 <div class="text-center">
                   <base-button type="primary" class="my-4" @click="loginToAccount">Sign In</base-button>
                 </div>
               </form>
+              <div id='alert' class="hidden" >
+              <b-alert   :show="dismissCountDown"
+                        variant="warning"
+                        @dismissed="dismissCountDown=0"
+                        @dismiss-count-down="countDownChanged">Blad logowania</b-alert>
+
+              </div>
             </template>
           </card>
           <div class="row mt-3">
             <div class="col-6">
-              <a href="#" class="text-light">
-                <small>Forgot password?</small>
-              </a>
+
             </div>
             <div class="col-6 text-right">
-              <a href="#" class="text-light">
+              <a href="#/register" class="text-light">
                 <small>Create new account</small>
               </a>
             </div>
@@ -64,37 +67,47 @@
 <script>
 import axios from "axios";
 import Landing from "@/views/Landing";
+import AppHeader from "@/layout/AppHeader.vue";
 
 export default {
   name: 'Login',
   data() {
     return {
       login: '',
-      password: ''
+      password: '',
+      dismissSecs: 5,
+      dismissCountDown: 0
     }
   },
 
   methods: {
     loginToAccount() {
-      console.log(this.login,this.password);
 
       axios.post('http://localhost:8080/api/clients/login', {
         login: this.login,
         password: this.password
       })
           .then(response => {
-            console.log(response)
             this.saveUserToken(response.data)
-            console.log(localStorage.getItem('user-token'))
             this.$router.push({name: 'landing'})
+            addEventListener('user-logged-in', AppHeader.methods.isLogin())
           })
           .catch(error => {
-            console.log(error)
+            this.countDownChanged(5)
+
           })
     },
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown
+    },
+    showAlert() {
+      this.dismissCountDown = this.dismissSecs
+    },
+
     saveUserToken(token) {
       localStorage.setItem('user-token', token)
     }
+
   }
 };
 </script>

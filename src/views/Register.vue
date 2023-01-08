@@ -154,7 +154,7 @@
                           id="zip"
                           v-model="form.zip"
                           type="text"
-                          pattern="[0-9]{5}"
+
                           placeholder="XX-XXX"
                           class="form-control"/>
                     </div>
@@ -187,7 +187,7 @@
                   </div>
                 </div>
                 <div class="text-center">
-                  <button type="submit" class="btn btn-default" @click="onSubmit">Default</button>
+                  <button type="submit" class="btn btn-default" @click="onSubmit">Utworz</button>
                 </div>
 
 
@@ -229,7 +229,6 @@ this.createAddress();
       axios.post('http://localhost:8080/api/clients/register', this.form)
           .then(response => {
             this.message = response.data.message;
-            console.log(response)
             this.sendMail(response.data);
 
           })
@@ -246,11 +245,11 @@ this.createAddress();
         mailRecipient: this.form.email
       })
           .then(response => {
-            console.log(response)
 
           })
           .catch(error => {
             this.message = error.response.data.message;
+
           });
     },
 
@@ -263,7 +262,6 @@ this.createAddress();
 
      this.form.address = a;
 
-      console.log(a);
     }
 
 

@@ -21,6 +21,23 @@
 
             </ul>
             <ul class="navbar-nav align-items-lg-center ml-lg-auto">
+
+              <li class="nav-item">
+                <a class="nav-link nav-link-icon" href="#/profile">
+                  <i class="ni ni-badge"></i>
+                  <span class="nav-link-inner--text d-lg-none">Facebook</span>
+                </a>
+              </li>
+
+
+              <li class="nav-item">
+                <a class="nav-link nav-link-icon" href="#/calculator">
+                  <i class="ni ni-money-coins"></i>
+                  <span class="nav-link-inner--text d-lg-none">Facebook</span>
+                </a>
+              </li>
+
+
                 <li class="nav-item">
                     <a class="nav-link nav-link-icon" href="https://www.facebook.com/creativetim" target="_blank" rel="noopener"
                        data-toggle="tooltip" title="Like us on Facebook">
@@ -49,6 +66,26 @@
                         <span class="nav-link-inner--text d-lg-none">Github</span>
                     </a>
                 </li>
+                <li class="nav-item d-none d-lg-block ml-lg-4" v-if="!isLogin">
+                    <a href="#/login"  rel="noopener"
+                       class="btn btn-neutral btn-icon">
+                <span class="btn-inner--icon">
+                  <i class="fa fa-cloud-download mr-2"></i>
+                </span>
+                        <span class="nav-link-inner--text" >Login</span>
+                    </a>
+                </li>
+
+
+              <li class="nav-item d-none d-lg-block ml-lg-4" v-if="isLogin">
+                <a href="/"  rel="noopener"
+                   class="btn btn-neutral btn-icon">
+                <span class="btn-inner--icon">
+                  <i class="fa fa-cloud-download mr-2"></i>
+                </span>
+                  <span class="nav-link-inner--text" id="account_action" @click="logout">Logout</span>
+                </a>
+              </li>
 
             </ul>
         </base-nav>
@@ -64,8 +101,35 @@ export default {
     BaseNav,
     CloseButton,
     BaseDropdown
-  }
-};
+  },
+  data() {
+    return {
+      isLogin: false,
+    };
+  },
+ methods: {
+    isUserLoggedIn() {
+      this.isLogin = !!localStorage.getItem("user-token");
+    },
+
+   logout() {
+     localStorage.removeItem("user-token");
+     this.$router.push("/login");
+   },
+   setTimeout() {
+     setInterval(() => {
+       this.isUserLoggedIn();
+     }, 1000);
+   },
+
+
+ },
+  mounted(){
+    this.isUserLoggedIn();
+    this.setTimeout();
+  },
+
+}
 </script>
 <style>
 </style>

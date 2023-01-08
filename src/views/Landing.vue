@@ -172,12 +172,18 @@
                   <icon name="ni ni-money-coins" type="success" rounded class="mb-4">
 
                   </icon>
-                  <h6 class="text-primary text-uppercase">Wiarygodność</h6>
-                  <dl>
-                    <dt class="">Firma posiada licencję na świadczenie usług płatniczych Komisji Nadzoru Finansowego</dt>
+                  <h6 class="text-warning text-uppercase">{{items[2].currency}}</h6>
+                  <div class="row">
+                    <div class="col-8">
+                      <dl>
+                        <dt>1 {{items[2].currency}} = {{items[2].ask}} PLN</dt>
 
-                  </dl>
-                  <base-button tag="a" href="#" type="primary" class="mt-4">
+                      </dl>
+                    </div>
+
+                  </div>
+
+                  <base-button tag="a" href="#/current" type="warning" class="mt-4">
                     Dowiedz sie wiecej
                   </base-button>
                 </card>
@@ -188,13 +194,20 @@
 
                 <card class="border-0" hover shadow body-classes="py-5">
                   <icon name="ni ni-money-coins" type="success" rounded class="mb-4">
-                  </icon>
-                  <h6 class="text-success text-uppercase">Wygoda i dostępność</h6>
-                  <dl>
-                    <dt>Całą dobę, cały tydzień i cały rok wymieniasz bez wychodzenia z domu</dt>
 
-                  </dl>
-                  <base-button tag="a" href="#" type="success" class="mt-4">
+                  </icon>
+                  <h6 class="text-warning text-uppercase">{{items[1].currency}}</h6>
+                  <div class="row">
+                    <div class="col-8">
+                      <dl>
+                        <dt>1 {{items[1].currency}} = {{items[1].ask}} PLN</dt>
+
+                      </dl>
+                    </div>
+
+                  </div>
+
+                  <base-button tag="a" href="#/current" type="warning" class="mt-4">
                     Dowiedz sie wiecej
                   </base-button>
                 </card>
@@ -208,23 +221,18 @@
                   <icon name="ni ni-money-coins" type="success" rounded class="mb-4">
 
                   </icon>
-                  <h6 class="text-warning text-uppercase">EUR</h6>
+                  <h6 class="text-warning text-uppercase">{{items[0].currency}}</h6>
                   <div class="row">
-                    <div class="col-4">
+                    <div class="col-8">
                       <dl>
-                        <dt>1 EUR = 4,56 PLN</dt>
+                        <dt>1 {{items[0].currency}} = {{items[0].ask}} PLN</dt>
 
                       </dl>
                     </div>
-                    <div class="col-4">
-                      <dl>
-                        <dt>1 PLN = 0,22 EUR</dt>
 
-                      </dl>
-                    </div>
                   </div>
 
-                  <base-button tag="a" href="#" type="warning" class="mt-4">
+                  <base-button tag="a" href="#/current" type="warning" class="mt-4">
                     Dowiedz sie wiecej
                   </base-button>
                 </card>
@@ -280,12 +288,16 @@
 </style>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "home",
  data() {
     return {
       url: process.env.BASE_URL,
-      subtitle: "This is the home page"
+      subtitle: "This is the home page",
+      items: [],
+
     };
   },
   methods: {
@@ -294,7 +306,22 @@ export default {
       this.$router.push(page);
     },
 
-  }
+
+    getCurrency() {
+      axios
+          .get("http://localhost:8080/api/nbp/today")
+          .then((response) => {
+            this.items = response.data;
+          });
+    },
+
+
+
+  },
+  mounted() {
+    this.getCurrency();
+
+  },
 };
 </script>
 

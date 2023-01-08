@@ -20,9 +20,9 @@ export default new Router({
             path: "/",
             name: "landing",
             components: {
-                header: AppHeader,
-                default: Landing,
-                footer: AppFooter
+                header: () => import('./layout/AppHeader.vue'),
+                default: () => import('./views/Landing.vue'),
+                footer: () => import('./layout/AppFooter.vue')
             }
         },
 
@@ -31,18 +31,22 @@ export default new Router({
             name: "login",
 
             components: {
-                header: AppHeader,
-                default: Login,
-                footer: AppFooter
+                header: () => import('./layout/AppHeader.vue'),
+
+                default: () => import('./views/Login.vue'),
+                footer: () => import('./layout/AppFooter.vue')
+
             }
         },
         {
             path: "/register",
             name: "register",
             components: {
-                header: AppHeader,
-                default: Register,
-                footer: AppFooter
+                header: () => import('./layout/AppHeader.vue'),
+
+                default: () => import('./views/Register.vue'),
+                footer: () => import('./layout/AppFooter.vue')
+
             }
         },
         {
@@ -52,18 +56,25 @@ export default new Router({
                localStorage.getItem('user-token') !== null ? next() : next('/login');
             },
             components: {
-                header: AppHeader,
-                default: Profile,
-                footer: AppFooter
+                header: () => import('./layout/AppHeader.vue'),
+
+                default: () => import('./views/Profile.vue'),
+                footer: () => import('./layout/AppFooter.vue')
+
             }
         },
         {
             path: "/calculator",
             name: "calculator",
+            beforeEnter: (to, from, next) => {
+                localStorage.getItem('user-token') !== null ? next() : next('/login');
+            },
             components: {
-                header: AppHeader,
-                default: MainCalculator,
-                footer: AppFooter
+                header: () => import('./layout/AppHeader.vue'),
+
+                default: () => import('./views/MainCalculator.vue'),
+                footer: () => import('./layout/AppFooter.vue')
+
             }
         },
 
@@ -71,9 +82,11 @@ export default new Router({
             path: "/current",
             name: "current",
             components: {
-                header: AppHeader,
-                default: CurrentValueForAllCurrency,
-                footer: AppFooter
+                header: () => import('./layout/AppHeader.vue'),
+
+                default: () => import('./views/CurrentValueForAllCurrency.vue'),
+                footer: () => import('./layout/AppFooter.vue')
+
             }
         },
         {
